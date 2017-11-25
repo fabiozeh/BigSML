@@ -20,9 +20,8 @@ Numbers are represented by a 4-tuple consisting of:
 
 Division and square root are calculated using the Newton-Raphson method
 
-## Notable ommissions:
+## Notable omissions:
 
-- Floor
 - Ceiling
 - Conversion to/from real
 - Conversion to/from IntInf

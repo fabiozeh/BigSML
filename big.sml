@@ -6,6 +6,7 @@ struct
 	
 	datatype prec = Unlimited | Max of int
 	type b = (prec * bool * int * int list)
+	exception DivByZero
 	
 	(* Access functions *)
 
@@ -104,6 +105,15 @@ struct
 
 	fun minus (pr,p,e,m):b = (pr, not p, e, m)
 	
+	fun floor x:int =
+	let
+	 	fun f (pr,p,e,m) i = if e < 0 then if p then i else ~i else
+	 		if null m then f (pr,p,e-1,m) (10*i)
+	 		else f (pr,p,e-1,tl m) (10*i + (hd m))
+	 in
+	 	f x 0
+	 end 
+
 	fun compareabs (x, y) =
 		let
 			val p = maxPrecision x y
@@ -238,7 +248,8 @@ struct
 			val pointone = (Max pr, true, ~(1+(exponent x)), [1])
 			fun iter k = multl (k, sub (two, multl (x, k)))
 		in
-			newton_raphson pointone iter ep
+			if isZero x then raise DivByZero
+			else newton_raphson pointone iter ep
 		end
 
 	fun divide (x, y):b = multl (x, reciprocal y)
